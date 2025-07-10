@@ -1,0 +1,32 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import "tailwindcss";
+
+@theme{
+  --font-poppins: Poppins, serif;
+  --color-primary:#027BFFCC;
+  --color-secondary: #F1F5F9; 
+  --color-accent-1: #0090FF1A;
+  --color-accent-2: #334155;
+  --color-accent-3: #5100FF1A;
+  --color-accent-4: #FB42511A;
+  --color-theme-red: #FB4251;
+  --color-theme-green: #22C45D;
+  --color-text-primary: #475569;
+  --color-text-secondary: #0F172A;
+  --color-icon-color: #475569;
+  --color-paragraph-color: #333,
+}
+
+.css-dev-only-do-not-override-1vj2ybr.ant-upload-wrapper .ant-upload-drag .ant-upload-btn{
+  height: 392px !important;
+}
+
+.ant-upload-list {
+  margin-top: 20px;
+}
+
+#filterDropdown .ant-select-selector {
+  background-color: #027BFFCC !important;
+  color: white !important;
+}
+
