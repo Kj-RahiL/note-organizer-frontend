@@ -3,8 +3,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { RootState } from "../store";
 
 const baseQuery = fetchBaseQuery({
-  // baseUrl: "http://localhost:3909/api/v1",
-  // baseUrl: "https://api.healixity.com/api/v1",
+  baseUrl: "http://localhost:5000/api/v1",
   prepareHeaders: (headers, { getState }) => {
     const token = (getState() as RootState).auth.accessToken;
     if (token) {
@@ -19,17 +18,10 @@ export const baseApi = createApi({
   baseQuery,
   endpoints: () => ({}),
   tagTypes: [
-    "auth",
-    "project",
-    "jobs",
-    "user",
-    "blog-category",
-    "blogs",
-    "category",
-    "Analytics",
-    "Payment",
-    "Delivery",
-    "Withdrawal",
+    "Auth",
+    "User",
+    "Note",
+    "Category",
   ],
 });
 

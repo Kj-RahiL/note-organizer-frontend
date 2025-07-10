@@ -1,19 +1,16 @@
-import { TApiResponse } from "../../types/global";
-import baseApi from "../api/baseApi";
+import baseApi from "../baseApi";
+
 
 const authApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
-    loginUser: build.mutation<
-      TApiResponse<{ accessToken: string }>,
-      { email: string; password: string }
-    >({
+    loginUser: build.mutation({
       query: (credentials) => ({
         url: "/auth/login", // Assuming this is your login endpoint
         method: "POST",
         body: credentials, // Sending the email and password as the request body
       }),
-      invalidatesTags: ["auth"],
-      // You can also define additional options such as `onQueryStarted`, `transformResponse`, etc.
+      invalidatesTags: ["Auth"],
+      
     }),
   }),
 });

@@ -1,13 +1,13 @@
 import { Card, Form, FormProps, Input, Button } from "antd";
 import Title from "antd/es/typography/Title";
-import { useLoginUserMutation } from "../../../redux/service/authApi";
 import ApiErrorHandler from "../../../utils/ApiErrorHandler";
 import { decodeJwtToken } from "../../../utils/decodeJwtToken";
 import { useAppDispatch } from "../../../redux/hooks/hooks";
 import { setUser } from "../../../redux/features/authSlice";
-import { UserRole } from "../../../types/enum";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
+import { useLoginUserMutation } from "../../../redux/api/auth/authApi";
+import { TUserRole } from "../../../types/userType";
 
 interface FieldType {
   email: string;
@@ -26,7 +26,7 @@ const Login = () => {
       const token = decodeJwtToken(res.data?.accessToken || "") as {
         email: string;
         id: string;
-        role: UserRole;
+        role: TUserRole;
       } | null;
       if (res.success && token) {
         dispatch(
