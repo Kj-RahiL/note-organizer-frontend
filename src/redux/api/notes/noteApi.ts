@@ -13,15 +13,22 @@ const noteApi = baseApi.injectEndpoints({
       },
       invalidatesTags: ["Note"],
     }),
+
+
+//get all
     getAllNote: build.query({
-      query: () => {
+      query: (params) => {
         return {
-          url: "/notes",
+          url: `/notes`,
           method: "GET",
+          params
         };
       },
       providesTags: ["Note"],
     }),
+
+
+    //get single
     getSingleNote: build.query({
       query: (id) => {
         return {
