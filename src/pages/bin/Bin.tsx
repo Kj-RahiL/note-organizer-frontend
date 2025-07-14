@@ -2,7 +2,7 @@
 import Title from "antd/es/typography/Title";
 import NoteSection from "../../components/Notes/NoteSection";
 import { useGetAllCategoryQuery } from "../../redux/api/category/category";
-import { useGetAllNoteQuery } from "../../redux/api/notes/noteApi";
+import { useGetMyNoteQuery } from "../../redux/api/notes/noteApi";
 import { Spin } from "antd";
 
 
@@ -10,7 +10,7 @@ const BinPage = () => {
     const {
         data: notesData,
         isLoading: notesLoading,
-    } = useGetAllNoteQuery({ isDeleted: true });
+    } = useGetMyNoteQuery({ isDeleted: true });
 
     const {
         data: categoriesData,

@@ -1,24 +1,34 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { Form, Input, Button, Typography, Card, message } from "antd";
+import { Form, Input, Button, Typography, Card } from "antd";
 import { useSignupMutation } from "../../../redux/api/auth/authApi";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 const { Title, Text } = Typography;
+interface FieldType {
+ name:string;   
+    email: string;
+    password: string;
+}
 
 const SignupPage = () => {
     const [signup, { isLoading }] = useSignupMutation();
+    const [form] = Form.useForm();
+    const navigate = useNavigate();
 
-    const handleFinish = async (values: any) => {
+    const handleFinish = async (values: FieldType) => {
         console.log(values, "signup form values");
 
         try {
             const res = await signup(values).unwrap();
             console.log(res, "signup success response");
-            message.success("Signup successful!");
-        } catch (err) {
+            toast.success("Signup successful!");
+            form.resetFields();
+            navigate("/login");
+        } catch (err:any) {
             console.error(err);
-            message.error("Signup failed");
+            toast.error(err.data.message || "Signup failed");
         }
     };
 

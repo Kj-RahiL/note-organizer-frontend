@@ -1,6 +1,5 @@
 import baseApi from "../baseApi";
 
-
 const noteApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     createNote: build.mutation({
@@ -14,19 +13,17 @@ const noteApi = baseApi.injectEndpoints({
       invalidatesTags: ["Note"],
     }),
 
-
-//get all
-    getAllNote: build.query({
+    //get all
+    getMyNote: build.query({
       query: (params) => {
         return {
-          url: `/notes`,
+          url: `/notes/my-notes`,
           method: "GET",
-          params
+          params,
         };
       },
       providesTags: ["Note"],
     }),
-
 
     //get single
     getSingleNote: build.query({
@@ -63,7 +60,7 @@ const noteApi = baseApi.injectEndpoints({
 export const {
   useUpdatedNoteMutation,
   useCreateNoteMutation,
-  useGetAllNoteQuery,
+  useGetMyNoteQuery,
   useGetSingleNoteQuery,
-  useDeleteNoteMutation
-} = noteApi
+  useDeleteNoteMutation,
+} = noteApi;

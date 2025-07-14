@@ -10,7 +10,7 @@ import {
 } from 'antd';
 import { useState } from 'react';
 import { useGetAllCategoryQuery } from "../../redux/api/category/category";
-import { useCreateNoteMutation, useGetAllNoteQuery } from "../../redux/api/notes/noteApi";
+import { useCreateNoteMutation, useGetMyNoteQuery } from "../../redux/api/notes/noteApi";
 import NoteSection from '../../components/Notes/NoteSection';
 import { TNote } from '../../types/note';
 import { useOutletContext } from 'react-router-dom';
@@ -24,12 +24,12 @@ const NotesPage = () => {
     const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
     const [createModalOpen, setCreateModalOpen] = useState(false);
 
-   
+
     //fetch data search and filter by category
     const {
         data: notesData,
         isLoading: notesLoading,
-    } = useGetAllNoteQuery({ searchTerm: searchQuery, categoryId: selectedCategory });
+    } = useGetMyNoteQuery({ searchTerm: searchQuery, categoryId: selectedCategory });
 
     //fetch all categories
     const {
@@ -37,9 +37,9 @@ const NotesPage = () => {
         isLoading: categoriesLoading
     } = useGetAllCategoryQuery({});
 
-   
 
-    const notes:TNote[] = notesData?.data || [];
+
+    const notes: TNote[] = notesData?.data || [];
     const categories = categoriesData?.data || [];
 
 
@@ -49,14 +49,14 @@ const NotesPage = () => {
     const handleCreateNote = async (values: any) => {
         console.log(values, "Creating note...");
         try {
-            const res = await createNote(values).unwrap(); 
+            const res = await createNote(values).unwrap();
             console.log(res);
             toast.success(res.message || "Note created successfully!");
             setCreateModalOpen(false);
-        } catch (error:any) {
+        } catch (error: any) {
             console.error('Error creating note:', error);
             toast.error(error.data.message || "Failed to create note. Please try again.");
-            
+
         }
     };
 
@@ -74,7 +74,7 @@ const NotesPage = () => {
                 <Title level={2} style={{ marginBottom: '24px' }}>My Notes</Title>
 
                 <Button type="primary" onClick={() => setCreateModalOpen(true)}>Create Notes</Button>
-                
+
             </div>
 
             <Divider />
