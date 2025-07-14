@@ -1,13 +1,15 @@
-import { Card, Form, FormProps, Input, Button } from "antd";
-import Title from "antd/es/typography/Title";
+
+import { Card, Form, FormProps, Input, Button, Typography } from "antd";
 import ApiErrorHandler from "../../../utils/ApiErrorHandler";
 import { decodeJwtToken } from "../../../utils/decodeJwtToken";
 import { useAppDispatch } from "../../../redux/hooks/hooks";
 import { setUser } from "../../../redux/features/authSlice";
 import { toast } from "sonner";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useLoginUserMutation } from "../../../redux/api/auth/authApi";
 import { TUserRole } from "../../../types/userType";
+
+const {Text, Title} = Typography
 
 interface FieldType {
   email: string;
@@ -54,49 +56,36 @@ const Login = () => {
   };
 
   return (
-    <div className="h-screen flex justify-center items-center ">
-      <Card className="!rounded-lg max-w-md w-full p-6 shadow-lg">
-        <Title className="text-center  !font-semibold mb-4">Login</Title>
-        <Form
-          size="large"
-          layout="vertical"
-          onFinish={onFinish}
-          onFinishFailed={onFinishFailed}
-        >
-          {/* Email Field */}
-          <Form.Item<FieldType>
-            label="Email"
+    <div className="flex justify-center items-center min-h-screen bg-gray-100">
+      <Card className="w-full max-w-md">
+        <Title level={3} className="text-center mb-4">
+          Log In
+        </Title>
+        <Form layout="vertical" onFinish={onFinish} onFinishFailed={onFinishFailed}>
+          <Form.Item
             name="email"
-            rules={[
-              { required: true, message: "Please enter your email" },
-              { type: "email", message: "Enter a valid email" },
-            ]}
+            label="Email"
+            rules={[{ required: true, message: "Please enter your email" }]}
           >
-            <Input placeholder="Enter your email" />
+            <Input placeholder="Email address" />
           </Form.Item>
 
-          {/* Password Field */}
-          <Form.Item<FieldType>
-            label="Password"
+          <Form.Item
             name="password"
+            label="Password"
             rules={[{ required: true, message: "Please enter your password" }]}
           >
-            <Input.Password placeholder="Enter your password" />
+            <Input.Password placeholder="Password" />
           </Form.Item>
 
-          {/* Submit Button */}
-          <Form.Item>
-            <Button
-              loading={isLoading}
-              size="large"
-              type="primary"
-              htmlType="submit"
-              className="w-full"
-            >
-              Login
-            </Button>
-          </Form.Item>
+          <Button type="primary" htmlType="submit" block loading={isLoading}>
+            Log In
+          </Button>
         </Form>
+        <div className="text-center mt-4">
+          <Text type="secondary">Don't have an account? </Text>
+          <Link to="/signup">Sign up</Link>
+        </div>
       </Card>
     </div>
   );

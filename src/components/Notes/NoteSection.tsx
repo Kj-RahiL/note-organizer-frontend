@@ -7,12 +7,16 @@ import {
 } from '@ant-design/icons';
 import { TCategory, TNote } from "../../types/note";
 import { MdOutlineArchive, MdOutlineUnarchive } from "react-icons/md";
+import CategorySection from "./CategorySection";
+
 
 const { Title, Text } = Typography;
 
 type NoteSectionProps = {
     notes: TNote[];
     categories: TCategory[];
+    selectedCategory: string | null;
+    setSelectedCategory?: (categoryId: string | null) => void;
     onArchive?: (id: string, isArchived: boolean) => void;
     onDelete?: (id: string, isDeleted: boolean) => void;
     showArchiveActions?: boolean;
@@ -22,11 +26,16 @@ type NoteSectionProps = {
 const NoteSection = ({
     notes,
     categories,
+    selectedCategory,
+    setSelectedCategory = () => { },
     onArchive = () => { },
     onDelete = () => { },
     showArchiveActions = true,
     showDeleteActions = true
 }: NoteSectionProps) => {
+
+
+
     const getPriorityColor = (priority: string) => {
         switch (priority) {
             case 'HIGH': return 'red';
@@ -42,9 +51,16 @@ const NoteSection = ({
 
     return (
         <div style={{ padding: '0 16px' }}>
-            <Title level={4} style={{ marginBottom: 24, color: '#595959', fontWeight: 500 }}>
-                Notes ({notes.length})
-            </Title>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Title level={4} style={{ marginBottom: 24, color: '#595959', fontWeight: 500 }}>
+                    Notes ({notes.length})
+                </Title>
+                <CategorySection
+                    categories={categories}
+                    selectedCategory={selectedCategory}
+                    onCategorySelect={setSelectedCategory}
+                />
+           </div>
 
             {notes.length === 0 ? (
                 <Empty
