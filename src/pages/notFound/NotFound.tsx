@@ -8,7 +8,7 @@ const NotFound = () => {
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center items-center px-4">
       <div className="text-center max-w-md mx-auto">
         {/* Error number */}
-        <h1 className="text-9xl font-bold text-blue-600 mb-4">404</h1>
+        <h1 className="text-9xl font-bold text-[#000435] mb-4">404</h1>
 
         {/* Title */}
         <h2 className="text-3xl font-extrabold text-gray-900 mb-3">Page not found</h2>

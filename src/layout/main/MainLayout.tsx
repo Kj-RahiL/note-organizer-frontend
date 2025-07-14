@@ -14,6 +14,7 @@ const { useBreakpoint } = Grid;
 const App: React.FC = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [mobileCollapsed, setMobileCollapsed] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
   const location = useLocation();
   const screens = useBreakpoint();
 
@@ -27,6 +28,8 @@ const App: React.FC = () => {
       setCollapsed(false); // Start expanded on desktop
     }
   }, [isMobile]);
+
+  // console.log(searchQuery, 'search');
 
   return (
     <Layout style={{ height: "100vh", overflow: "hidden" }}>
@@ -66,12 +69,13 @@ const App: React.FC = () => {
         <Space size="middle" align="center">
           {!isMobile && (
             <Input
+              onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search"
               style={{
-                width: "200px",
+                width: "240px",
                 height: "32px",
-                borderRadius: "4px",
-                border: "1px solid #DFDFDF",
+                border: "1px solid #000435",
+                marginRight: "10px",
               }}
             />
           )}
@@ -79,7 +83,7 @@ const App: React.FC = () => {
           <Avatar
             size={isMobile ? 28 : 32}
             src={user}
-            style={{ cursor: "pointer" }}
+            style={{ cursor: "pointer", border: "1px solid #000435" }}
           />
 
           {isMobile && (
@@ -176,7 +180,7 @@ const App: React.FC = () => {
               overflowX: "hidden",
             }}
           >
-            <Outlet />
+            <Outlet context={{ searchQuery }}/>
           </Content>
         </Layout>
       </Layout>

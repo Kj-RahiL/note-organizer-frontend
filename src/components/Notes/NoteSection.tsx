@@ -1,13 +1,12 @@
-import { Button, Card, Col, Empty, Row, Tag, Typography, Space, Popconfirm } from "antd";
+import { Button, Card, Col, Empty, Row, Tag, Typography, Space, Popconfirm, Tooltip } from "antd";
 import {
     PushpinOutlined,
     BulbOutlined,
     DeleteOutlined,
-    FolderOutlined,
-    FolderOpenOutlined,
     RestOutlined
 } from '@ant-design/icons';
 import { TCategory, TNote } from "../../types/note";
+import { MdOutlineArchive, MdOutlineUnarchive } from "react-icons/md";
 
 const { Title, Text } = Typography;
 
@@ -23,8 +22,8 @@ type NoteSectionProps = {
 const NoteSection = ({
     notes,
     categories,
-    onArchive = () => {},
-    onDelete = () => {},
+    onArchive = () => { },
+    onDelete = () => { },
     showArchiveActions = true,
     showDeleteActions = true
 }: NoteSectionProps) => {
@@ -35,6 +34,10 @@ const NoteSection = ({
             case 'LOW': return 'green';
             default: return 'blue';
         }
+    };
+
+    const onPinToggle = (id: string, isPinned: boolean) => {
+        onArchive(id, !isPinned);
     };
 
     return (
@@ -63,20 +66,20 @@ const NoteSection = ({
                             borderRadius: 8,
                             boxShadow: '0 2px 8px rgba(0,0,0,0.09)',
                             transition: 'all 0.3s',
-                            height: '100%',
                             display: 'flex',
                             flexDirection: 'column',
-                            opacity: note.isDeleted ? 0.7 : 1
+                            opacity: note.isDeleted ? 0.7 : 1,
+                            // minHeight: 250
                         };
 
                         return (
-                            <Col xs={24} sm={12} md={8} lg={6} key={note.id}>
+                            <Col xs={24} sm={12} md={8} lg={8} key={note.id}>
                                 <Card
                                     hoverable={!note.isDeleted}
                                     style={cardStyle}
                                     bodyStyle={{
                                         padding: 16,
-                                        flex: 1,
+                                        // flex: 1,
                                         display: 'flex',
                                         flexDirection: 'column'
                                     }}
@@ -88,16 +91,16 @@ const NoteSection = ({
                                         right: 12,
                                         display: 'flex',
                                         gap: 8
-                                    }}>
-                                        {note.isPinned && !note.isDeleted && (
-                                            <PushpinOutlined style={{ color: '#faad14', fontSize: 16 }} />
-                                        )}
-                                        {note.isArchived && !note.isDeleted && (
-                                            <Tag color="geekblue">Archived</Tag>
-                                        )}
-                                        {note.isDeleted && (
-                                            <Tag color="error">Deleted</Tag>
-                                        )}
+                                    }}> {!note.isDeleted && (
+                                        <Tooltip title={note.isPinned ? "Unpin" : "Pin"}>
+                                            <Button
+                                                type="text"
+                                                icon={<PushpinOutlined style={{ color: note.isPinned ? '#faad14' : '#bfbfbf' }} />}
+                                                onClick={() => onPinToggle(note.id, !note.isPinned)}
+                                            />
+                                        </Tooltip>
+                                    )}
+
                                     </div>
 
                                     {/* Category */}
@@ -125,20 +128,15 @@ const NoteSection = ({
                                         {note.title}
                                     </Title>
 
+
                                     {/* Content */}
-                                    <Text
-                                        type="secondary"
-                                        ellipsis={{}}
-                                        style={{
-                                            display: 'block',
-                                            marginBottom: 16,
-                                            flex: 1,
-                                            lineHeight: 1.5,
-                                            textDecoration: note.isDeleted ? 'line-through' : 'none'
-                                        }}
+                                    <p
+                                        className={`mb-4 leading-relaxed ${note.isDeleted ? 'line-through text-gray-400' : 'text-gray-500'
+                                            }`}
                                     >
                                         {note.content}
-                                    </Text>
+                                    </p>
+
 
                                     {/* Footer with Actions */}
                                     <div style={{
@@ -153,25 +151,25 @@ const NoteSection = ({
 
                                         <Space>
                                             {showArchiveActions && !note.isDeleted && (
-                                                <Button
-                                                    size="small"
-                                                    icon={note.isArchived ? <FolderOpenOutlined /> : <FolderOutlined />}
-                                                    onClick={() => onArchive(note.id, !note.isArchived)}
-                                                >
-                                                    {note.isArchived ? 'Unarchive' : 'Archive'}
-                                                </Button>
+                                                <Tooltip title={note.isArchived ? 'Unarchive' : 'Archive'}>
+                                                    <Button
+                                                        size="small"
+                                                        icon={note.isArchived ? <MdOutlineArchive /> : <MdOutlineUnarchive />}
+                                                        onClick={() => onArchive(note.id, !note.isArchived)}
+                                                    />
+                                                </Tooltip>
                                             )}
 
                                             {showDeleteActions && (
                                                 note.isDeleted ? (
                                                     <>
-                                                        <Button
-                                                            size="small"
-                                                            icon={<RestOutlined />}
-                                                            onClick={() => onDelete(note.id, false)}
-                                                        >
-                                                            Restore
-                                                        </Button>
+                                                        <Tooltip title="Restore">
+                                                            <Button
+                                                                size="small"
+                                                                icon={<RestOutlined />}
+                                                                onClick={() => onDelete(note.id, false)}
+                                                            />
+                                                        </Tooltip>
                                                         <Popconfirm
                                                             title="Permanently delete this note?"
                                                             onConfirm={() => onDelete(note.id, true)}
@@ -179,13 +177,13 @@ const NoteSection = ({
                                                             cancelText="Cancel"
                                                             okButtonProps={{ danger: true }}
                                                         >
-                                                            <Button
-                                                                size="small"
-                                                                danger
-                                                                icon={<DeleteOutlined />}
-                                                            >
-                                                                Delete Forever
-                                                            </Button>
+                                                            <Tooltip title="Delete Forever">
+                                                                <Button
+                                                                    size="small"
+                                                                    danger
+                                                                    icon={<DeleteOutlined />}
+                                                                />
+                                                            </Tooltip>
                                                         </Popconfirm>
                                                     </>
                                                 ) : (
@@ -195,13 +193,13 @@ const NoteSection = ({
                                                         okText="Yes"
                                                         cancelText="No"
                                                     >
-                                                        <Button
-                                                            size="small"
-                                                            danger
-                                                            icon={<DeleteOutlined />}
-                                                        >
-                                                            Delete
-                                                        </Button>
+                                                        <Tooltip title="Delete">
+                                                            <Button
+                                                                size="small"
+                                                                danger
+                                                                icon={<DeleteOutlined />}
+                                                            />
+                                                        </Tooltip>
                                                     </Popconfirm>
                                                 )
                                             )}

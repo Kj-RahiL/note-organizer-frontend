@@ -12,14 +12,17 @@ import { useGetAllNoteQuery } from "../../redux/api/notes/noteApi";
 import CategorySection from '../../components/Notes/CategorySection';
 import NoteSection from '../../components/Notes/NoteSection';
 import { TNote } from '../../types/note';
+import { useOutletContext } from 'react-router-dom';
 
 const { Title } = Typography;
 
 const NotesPage = () => {
+    const { searchQuery } = useOutletContext<{ searchQuery: string }>()
+    console.log(searchQuery, 'oii kire ');
     const {
         data: notesData,
         isLoading: notesLoading,
-    } = useGetAllNoteQuery({});
+    } = useGetAllNoteQuery({searchTerm: searchQuery});
 
     const {
         data: categoriesData,
