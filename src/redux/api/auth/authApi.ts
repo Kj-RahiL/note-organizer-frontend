@@ -1,8 +1,6 @@
 import baseApi from "../baseApi";
 
-
 const authApi = baseApi.injectEndpoints({
-
   endpoints: (build) => ({
     signup: build.mutation({
       query: (data) => ({
@@ -19,9 +17,31 @@ const authApi = baseApi.injectEndpoints({
         body: credentials, // Sending the email and password as the request body
       }),
       invalidatesTags: ["Auth"],
-      
+    }),
+
+    changePassword: build.mutation({
+      query: (data) => ({
+        url: "/auth/change-password",
+        method: "POST",
+        body: data,
+      }),
+    }),
+
+    getMyProfile: build.query({
+      query: () => {
+        return {
+          url: `/auth/get-me`,
+          method: "GET",
+        };
+      },
+      providesTags: ["User"],
     }),
   }),
 });
 
-export const { useLoginUserMutation, useSignupMutation } = authApi;
+export const {
+  useLoginUserMutation,
+  useSignupMutation,
+  useGetMyProfileQuery,
+  useChangePasswordMutation,
+} = authApi;

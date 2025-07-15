@@ -22,6 +22,7 @@ export const baseApi = createApi({
     "User",
     "Note",
     "Category",
+    "Image"
   ],
 });
 

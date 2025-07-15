@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
-import { Layout, Menu, Grid, Button, Avatar, Space, Input } from "antd";
+import { Layout, Menu, Grid, Button, Avatar, Space, Input, Tooltip } from "antd";
 import logo from "/logo.png";
 import { MdOutlineArchive } from "react-icons/md";
 import { GrDocumentNotes } from "react-icons/gr";
@@ -92,11 +92,15 @@ const App: React.FC = () => {
             />
           )}
 
-          <Avatar
-            size={isMobile ? 28 : 32}
-            src={user}
-            style={{ cursor: "pointer", border: "1px solid #000435" }}
-          />
+         <Link to="/profile">
+            <Tooltip title="Profile">
+              <Avatar
+                size={isMobile ? 28 : 40}
+                src={user}
+                style={{ cursor: "pointer", border: "1px solid #000435", marginRight: "8px", }}
+              />
+            </Tooltip>
+          </Link>
 
           {isMobile && (
             <Button

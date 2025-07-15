@@ -15,7 +15,7 @@ const { Title, Text } = Typography;
 type NoteSectionProps = {
     notes: TNote[];
     categories: TCategory[];
-    selectedCategory: string | null;
+    selectedCategory?: string | null;
     setSelectedCategory?: (categoryId: string | null) => void;
     onArchive?: (id: string, isArchived: boolean) => void;
     onDelete?: (id: string, isDeleted: boolean) => void;
@@ -57,7 +57,7 @@ const NoteSection = ({
                 </Title>
                 <CategorySection
                     categories={categories}
-                    selectedCategory={selectedCategory}
+                    selectedCategory={selectedCategory!}
                     onCategorySelect={setSelectedCategory}
                 />
            </div>
