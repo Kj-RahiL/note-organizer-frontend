@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 
@@ -13,7 +13,6 @@ import {
     SaveOutlined,
     CloseOutlined,
 } from "@ant-design/icons"
-import type { UploadFile, UploadProps } from "antd"
 import { useChangePasswordMutation, useGetMyProfileQuery } from "../../redux/api/auth/authApi"
 import { useUpdatedMeMutation } from "../../redux/api/user/userApi"
 import { toast } from "sonner"

@@ -1,13 +1,17 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button, Card, Col, Empty, Row, Tag, Typography, Space, Popconfirm, Tooltip } from "antd";
 import {
     PushpinOutlined,
     BulbOutlined,
     DeleteOutlined,
-    RestOutlined
+    RestOutlined,
+    EditOutlined
 } from '@ant-design/icons';
 import { TCategory, TNote } from "../../types/note";
 import { MdOutlineArchive, MdOutlineUnarchive } from "react-icons/md";
 import CategorySection from "./CategorySection";
+import { useDeleteNoteMutation, useUpdatedNoteMutation } from "../../redux/api/notes/noteApi";
+import { toast } from "sonner";
 
 
 const { Title, Text } = Typography;
@@ -17,8 +21,6 @@ type NoteSectionProps = {
     categories: TCategory[];
     selectedCategory?: string | null;
     setSelectedCategory?: (categoryId: string | null) => void;
-    onArchive?: (id: string, isArchived: boolean) => void;
-    onDelete?: (id: string, isDeleted: boolean) => void;
     showArchiveActions?: boolean;
     showDeleteActions?: boolean;
 };
@@ -28,14 +30,69 @@ const NoteSection = ({
     categories,
     selectedCategory,
     setSelectedCategory = () => { },
-    onArchive = () => { },
-    onDelete = () => { },
     showArchiveActions = true,
     showDeleteActions = true
 }: NoteSectionProps) => {
+    const [updateNote] = useUpdatedNoteMutation()
+    const [deleteNote] = useDeleteNoteMutation()
+
+
+    const handleArchive = async (id: string, isArchived: boolean) => {
+        console.log(id, isArchived, 'ar');
+        const data = {
+            isArchived
+        }
+        try {
+            await updateNote({ id, data }).unwrap()
+            toast.success(isArchived ? "Note archived" : "Note unarchived")
+        } catch (error: any) {
+            console.log(error)
+            toast.error(error?.data.message || "Failed to update")
+        }
+    };
+
+    const handleBin = async (id: string, isDeleted: boolean) => {
+        console.log(id, isDeleted, 'bin');
+        const data = {
+            isDeleted
+        }
+        try {
+           await updateNote({ id, data }).unwrap()
+            toast.success(isDeleted ? "Note deleted" : "Note restored")
+        } catch (error: any) {
+            console.log(error)
+            toast.error(error?.data.message || "Failed to delete")
+        }
+    };
+
+    const handlePermanentDelete = async (id: string) => {
+        console.log(id, 'per')
+        try {
+            const res = await deleteNote(id).unwrap()
+            console.log(res);
+            toast.success( "Note deleted permanently")
+        } catch (error: any) {
+            console.log(error)
+            toast.error(error?.data.message || "Failed to permanent delete")
+        }
+    }
 
 
 
+    const handlePinToggle = async (id: string, isPinned: boolean) => {
+        // console.log(id, isPinned);
+        const data = {
+            isPinned
+        }
+        try {
+            const res = await updateNote({ id, data }).unwrap()
+            console.log(res);
+            toast.success(isPinned ? "Pinned" : "Unpinned")
+        } catch (error: any) {
+            console.log(error)
+            toast.error(error?.data.message || "Failed to Pinned")
+        }
+    };
     const getPriorityColor = (priority: string) => {
         switch (priority) {
             case 'HIGH': return 'red';
@@ -44,11 +101,6 @@ const NoteSection = ({
             default: return 'blue';
         }
     };
-
-    const onPinToggle = (id: string, isPinned: boolean) => {
-        onArchive(id, !isPinned);
-    };
-
     return (
         <div style={{ padding: '0 16px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -60,7 +112,7 @@ const NoteSection = ({
                     selectedCategory={selectedCategory!}
                     onCategorySelect={setSelectedCategory}
                 />
-           </div>
+            </div>
 
             {notes.length === 0 ? (
                 <Empty
@@ -112,7 +164,7 @@ const NoteSection = ({
                                             <Button
                                                 type="text"
                                                 icon={<PushpinOutlined style={{ color: note.isPinned ? '#faad14' : '#bfbfbf' }} />}
-                                                onClick={() => onPinToggle(note.id, !note.isPinned)}
+                                                onClick={() => handlePinToggle(note.id, !note.isPinned)}
                                             />
                                         </Tooltip>
                                     )}
@@ -120,12 +172,19 @@ const NoteSection = ({
                                     </div>
 
                                     {/* Category */}
-                                    <div style={{ marginBottom: 12 }}>
+                                    <div style={{
+                                        marginBottom: 12,
+                                        display: "flex",
+                                        alignItems: 'center',
+                                    }}>
                                         <Tag
                                             color={category?.color || '#d9d9d9'}
                                             style={{ color: '#fff' }}
                                         >
                                             {category?.name || 'Uncategorized'}
+                                        </Tag>
+                                        <Tag color={getPriorityColor(note.priority)}>
+                                            {note.priority.toLowerCase()}
                                         </Tag>
                                     </div>
 
@@ -161,17 +220,23 @@ const NoteSection = ({
                                         alignItems: 'center',
                                         marginTop: 'auto'
                                     }}>
-                                        <Tag color={getPriorityColor(note.priority)}>
-                                            {note.priority.toLowerCase()}
-                                        </Tag>
+                                        <div>
+                                            {!note.isDeleted && !note.isArchived && (
+                                                <Tooltip title="Edit Note">
+                                                    <Button>
+                                                        <EditOutlined />
+                                                    </Button>
+                                                </Tooltip>
+                                            )}
+                                        </div>
 
-                                        <Space>
+                                        <Space style={{ alignItems: "flex-end" }}>
                                             {showArchiveActions && !note.isDeleted && (
                                                 <Tooltip title={note.isArchived ? 'Unarchive' : 'Archive'}>
                                                     <Button
                                                         size="small"
                                                         icon={note.isArchived ? <MdOutlineArchive /> : <MdOutlineUnarchive />}
-                                                        onClick={() => onArchive(note.id, !note.isArchived)}
+                                                        onClick={() => handleArchive(note.id, !note.isArchived)}
                                                     />
                                                 </Tooltip>
                                             )}
@@ -183,12 +248,12 @@ const NoteSection = ({
                                                             <Button
                                                                 size="small"
                                                                 icon={<RestOutlined />}
-                                                                onClick={() => onDelete(note.id, false)}
+                                                                onClick={() => handleBin(note.id, false)}
                                                             />
                                                         </Tooltip>
                                                         <Popconfirm
                                                             title="Permanently delete this note?"
-                                                            onConfirm={() => onDelete(note.id, true)}
+                                                            onConfirm={() => handlePermanentDelete(note.id)}
                                                             okText="Delete"
                                                             cancelText="Cancel"
                                                             okButtonProps={{ danger: true }}
@@ -205,7 +270,7 @@ const NoteSection = ({
                                                 ) : (
                                                     <Popconfirm
                                                         title={note.isArchived ? "Move to bin?" : "Move to bin?"}
-                                                        onConfirm={() => onDelete(note.id, true)}
+                                                        onConfirm={() => handleBin(note.id, true)}
                                                         okText="Yes"
                                                         cancelText="No"
                                                     >

@@ -38,8 +38,8 @@ const noteApi = baseApi.injectEndpoints({
     updatedNote: build.mutation({
       query: (body) => {
         return {
-          url: `/notes${body.id}`,
-          method: "POST",
+          url: `/notes/${body.id}`,
+          method: "PUT",
           body: body.data,
         };
       },

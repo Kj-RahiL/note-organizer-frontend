@@ -93,7 +93,7 @@ const App: React.FC = () => {
           )}
 
          <Link to="/profile">
-            <Tooltip title="Profile">
+            <Tooltip title="View Profile">
               <Avatar
                 size={isMobile ? 28 : 40}
                 src={user}

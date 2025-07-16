@@ -33,7 +33,7 @@ const App: React.FC = () => (
     >
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
-            <Toaster />
+            <Toaster position="top-right" />
             <RouterProvider />
         </PersistGate>
       </Provider>
