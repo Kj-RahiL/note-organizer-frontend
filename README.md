@@ -1,50 +1,95 @@
-# React + TypeScript + Vite
+# 📝 Note Organizer
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A minimal yet powerful **Note Organizer** built with React, TypeScript, Vite, and Redux. This application helps users manage their notes efficiently with image support, a clean UI, and scalable code architecture.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🚀 Features
 
-## Expanding the ESLint configuration
+- ⚡ **Fast and lightweight frontend** with Vite + React + TypeScript
+- 🖊️ **Create, edit, delete, and update notes seamlessly**
+- 🖼️ **Upload images** to notes with real-time status feedback
+- 🔔 **Toast notifications** for upload progress, success, and errors
+- 🗂️ **State management using Redux Toolkit** for scalable data flow
+- 💻 **ESLint + Prettier** configured for consistent, clean code
+- 🔥 **Hot Module Replacement (HMR)** for rapid development
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+---
 
-- Configure the top-level `parserOptions` property like this:
+## 🛠️ Tech Stack
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+- React 18
+- TypeScript
+- Vite (with SWC for fast refresh)
+- Redux Toolkit + RTK Query
+- Ant Design for UI components
+- Sonner for toast notifications
+
+---
+
+## ✨ Project Structure
+
+src/
+├── assests/ # image
+├── components/ # Reusable UI components
+├── layout/ # Redux store configuration
+├── hooks/ #, hooks, and logic
+├── pages/ # Page-level components (Notes, Home, etc.)
+├── redux/ # Redux store configuration
+├── routes/ # routes
+├── types/ # TypeScript types and interfaces
+├── utils
+├── App.tsx
+└── main.tsx
+
+## 📦 Installation
+
+Clone the repository:
+
+```bash
+   git clone https://github.com/Kj-RahiL/note-organizer-frontend.git
+   cd note-organizer-frontend
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+**Install dependencies:**
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+```bash
+   npm install
+   npm run dev
 ```
+Open http://localhost:5173 in your browser to view the app.
+
+## 💡 Short Description
+
+**Note Organizer** is a React + TypeScript + Redux application for creating, editing, and managing notes with image uploads and a clean, user-friendly interface.
+
+---
+
+## 📸 Screenshots
+
+## 📸 Screenshots
+
+![Main Page](https://github.com/Kj-RahiL/note-organizer-frontend/blob/main/public/main-page.png)
+
+---
+
+## 📝 Future Improvements
+
+- Tag and category system for notes
+- Search and filter functionality
+- Drag-and-drop note ordering
+- Note sharing with public links
+- Dark mode support
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Please open an issue or submit a pull request for improvements or feature suggestions.
+
+---
+
+## 📄 License
+
+This project is licensed under the **MIT License**.
+
