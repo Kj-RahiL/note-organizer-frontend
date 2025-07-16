@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Button, Card, Col, Empty, Row, Tag, Typography, Space, Popconfirm, Tooltip } from "antd";
+import { Button, Card, Col, Empty, Row, Tag, Typography, Space, Popconfirm, Tooltip, Image } from "antd";
 import {
     PushpinOutlined,
     BulbOutlined,
@@ -14,6 +14,8 @@ import { useDeleteNoteMutation, useUpdatedNoteMutation } from "../../redux/api/n
 import { toast } from "sonner";
 
 import AddImage from "./AddImage";
+import EditNoteModal from "./EditNoteModal";
+import { useState } from "react";
 
 
 const { Title, Text } = Typography;
@@ -35,9 +37,12 @@ const NoteSection = ({
     showArchiveActions = true,
     showDeleteActions = true
 }: NoteSectionProps) => {
+    const [editModalOpen, setEditModalOpen] = useState(false);
+    const [selectedNote, setSelectedNote] = useState<TNote | null>(null);
+
     const [updateNote] = useUpdatedNoteMutation()
     const [deleteNote] = useDeleteNoteMutation()
-    // const [createImage] = useCreateImageMutation()
+    
 
 
     const handleArchive = async (id: string, isArchived: boolean) => {
@@ -81,7 +86,6 @@ const NoteSection = ({
     }
 
 
-
     const handlePinToggle = async (id: string, isPinned: boolean) => {
         // console.log(id, isPinned);
         const data = {
@@ -97,7 +101,12 @@ const NoteSection = ({
         }
     };
 
- 
+    const handleEditNote = (note: TNote) => {
+        setSelectedNote(note);
+        setEditModalOpen(true);
+    };
+
+
     const getPriorityColor = (priority: string) => {
         switch (priority) {
             case 'HIGH': return 'red';
@@ -178,9 +187,9 @@ const NoteSection = ({
 
                                     {/* Category */}
                                     <div style={{
-                                        position: 'absolute',
-                                        top: 12,
-                                        left: 12,
+                                        // position: 'absolute',
+                                        // top: 12,
+                                        // left: 12,
                                         display: 'flex',
                                         gap: 8,
                                         alignItems: 'center',
@@ -196,6 +205,27 @@ const NoteSection = ({
                                             {note.priority.toLowerCase()}
                                         </Tag>
                                     </div>
+
+                                    {/* images */}
+                                    {note.images && note.images.length > 0 && (
+                                        <div style={{ marginTop: 12 }}>
+                                            <Image.PreviewGroup>
+                                                <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                                                    {note.images.map((imgUrl, index) => (
+                                                        <Image
+                                                            key={index}
+                                                            src={imgUrl}
+                                                            alt={`note-image-${index}`}
+                                                            width={80}
+                                                            height={80}
+                                                            style={{ objectFit: "cover", borderRadius: 4 }}
+                                                        />
+                                                    ))}
+                                                </div>
+                                            </Image.PreviewGroup>
+                                        </div>
+                                    )}
+
 
                                     {/* Title */}
                                     <Title
@@ -235,14 +265,14 @@ const NoteSection = ({
                                             {!note.isDeleted && !note.isArchived && (
                                                 <div className="flex gap-2">
                                                     <Tooltip title="Edit Note">
-                                                        <Button>
+                                                        <Button onClick={() => handleEditNote(note)}>
                                                             <EditOutlined />
                                                         </Button>
                                                     </Tooltip>
                                                     <Tooltip title="Add Image">
                                                         <AddImage note={note} />
                                                     </Tooltip>
-                                                    
+
                                                 </div>
                                             )}
                                         </div>
@@ -252,7 +282,6 @@ const NoteSection = ({
                                             {showArchiveActions && !note.isDeleted && (
                                                 <Tooltip title={note.isArchived ? 'Unarchive' : 'Archive'}>
                                                     <Button
-                                                        size="small"
                                                         icon={note.isArchived ? <MdOutlineArchive /> : <MdOutlineUnarchive />}
                                                         onClick={() => handleArchive(note.id, !note.isArchived)}
                                                     />
@@ -264,7 +293,7 @@ const NoteSection = ({
                                                     <>
                                                         <Tooltip title="Restore">
                                                             <Button
-                                                                size="small"
+                                                                size="middle"
                                                                 icon={<RestOutlined />}
                                                                 onClick={() => handleBin(note.id, false)}
                                                             />
@@ -278,7 +307,6 @@ const NoteSection = ({
                                                         >
                                                             <Tooltip title="Delete Forever">
                                                                 <Button
-                                                                    size="small"
                                                                     danger
                                                                     icon={<DeleteOutlined />}
                                                                 />
@@ -294,7 +322,6 @@ const NoteSection = ({
                                                     >
                                                         <Tooltip title="Delete">
                                                             <Button
-                                                                size="small"
                                                                 danger
                                                                 icon={<DeleteOutlined />}
                                                             />
@@ -310,6 +337,20 @@ const NoteSection = ({
                     })}
                 </Row>
             )}
+
+
+            {selectedNote && (
+                <EditNoteModal
+                    open={editModalOpen}
+                    onClose={() => {
+                        setEditModalOpen(false);
+                        setSelectedNote(null);
+                    }}
+                    categories={categories}
+                    note={selectedNote}
+                />
+            )}
+
         </div>
     );
 };

@@ -1,11 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import  { useRef } from "react";
+import { useRef } from "react";
 import { Button, Tooltip } from "antd";
 import { LuImagePlus } from "react-icons/lu";
 import { TNote } from "../../types/note";
+import { useCreateImageMutation } from "../../redux/api/image/imageApi";
+import { useUpdatedNoteMutation } from "../../redux/api/notes/noteApi";
+import { toast } from "sonner";
 
 const AddImage = ({ note }: { note: TNote }) => {
     console.log(note);
+    const [createImage, { isLoading: isUploading }] = useCreateImageMutation()
+    const [updateNote, { isLoading }] = useUpdatedNoteMutation()
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const handleClick = () => {
@@ -14,39 +19,36 @@ const AddImage = ({ note }: { note: TNote }) => {
         }
     };
 
-    const handleFileChange = (event:any) => {
+    const handleFileChange = async (event: any) => {
         const file = event.target.files[0];
-        if (file) {
-          
-            //     const formData = new FormData();
-            //     formData.append("image", imageFile as File);
+        if (!file) return;
+        const formData = new FormData();
+        formData.append("image", file as File);
+        const toastId = toast.loading("Uploading image...");
 
-            //     try {
-            //         // call your backend upload endpoint
-            //         const res = await createImage(formData).unwrap();
 
-            //         const data = res.data
+        try {
+            // call your backend upload endpoint
+            const res = await createImage(formData).unwrap();
+            const url = res.data.imageUrl;
 
-            //         setImagePreview(data.imageUrl);
+            const updatedImages = [...(note.images || []), url];
+            const data = { images: updatedImages };
+            const updateData = await updateNote({ id: note.id, data }).unwrap()
+            console.log(updateData, 'update data');
+            toast.success("Image uploaded successfully!", {
+                id: toastId,
+            });
 
-            //     } catch (error) {
-            //         console.error(error);
-            //         toast.error("Upload error");
-            //     }
-
- 
-            // try {
-            //     const res = await updateNote({ id, data }).unwrap()
-            //     console.log(res);
-            //     toast.success(isPinned ? "Pinned" : "Unpinned")
-            // } catch (error: any) {
-            //     console.log(error)
-            //     toast.error(error?.data.message || "Failed to Pinned")
-            // }
+        } catch (error) {
+            console.error(error);
+            toast.error("Upload error", {
+                id: toastId,
+            });
         }
-    };
+    }
 
- 
+
 
     return (
         <Tooltip title="Add Image">
@@ -57,8 +59,8 @@ const AddImage = ({ note }: { note: TNote }) => {
                     onChange={handleFileChange}
                     style={{ display: "none" }}
                 />
-                <Button onClick={handleClick}>
-                    <LuImagePlus />
+                <Button onClick={handleClick} loading={isLoading || isUploading}>
+                    <LuImagePlus  />
                 </Button>
             </>
         </Tooltip>

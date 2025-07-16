@@ -21,6 +21,7 @@ export type TNote = {
   isPinned: boolean;
   isArchived: boolean;
   isDeleted: boolean;
+  images : []
   createdAt: string; // or Date
   updatedAt: string; // or Date
   category: TCategory;
