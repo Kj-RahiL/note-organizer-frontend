@@ -67,8 +67,6 @@ Open http://localhost:5173 in your browser to view the app.
 
 ## 📸 Screenshots
 
-## 📸 Screenshots
-
 ![Main Page](https://github.com/Kj-RahiL/note-organizer-frontend/blob/main/public/main-page.png)
 
 ---
