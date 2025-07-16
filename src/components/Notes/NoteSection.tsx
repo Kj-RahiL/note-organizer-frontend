@@ -5,13 +5,15 @@ import {
     BulbOutlined,
     DeleteOutlined,
     RestOutlined,
-    EditOutlined
+    EditOutlined,
 } from '@ant-design/icons';
 import { TCategory, TNote } from "../../types/note";
 import { MdOutlineArchive, MdOutlineUnarchive } from "react-icons/md";
 import CategorySection from "./CategorySection";
 import { useDeleteNoteMutation, useUpdatedNoteMutation } from "../../redux/api/notes/noteApi";
 import { toast } from "sonner";
+
+import AddImage from "./AddImage";
 
 
 const { Title, Text } = Typography;
@@ -35,6 +37,7 @@ const NoteSection = ({
 }: NoteSectionProps) => {
     const [updateNote] = useUpdatedNoteMutation()
     const [deleteNote] = useDeleteNoteMutation()
+    // const [createImage] = useCreateImageMutation()
 
 
     const handleArchive = async (id: string, isArchived: boolean) => {
@@ -57,7 +60,7 @@ const NoteSection = ({
             isDeleted
         }
         try {
-           await updateNote({ id, data }).unwrap()
+            await updateNote({ id, data }).unwrap()
             toast.success(isDeleted ? "Note deleted" : "Note restored")
         } catch (error: any) {
             console.log(error)
@@ -70,7 +73,7 @@ const NoteSection = ({
         try {
             const res = await deleteNote(id).unwrap()
             console.log(res);
-            toast.success( "Note deleted permanently")
+            toast.success("Note deleted permanently")
         } catch (error: any) {
             console.log(error)
             toast.error(error?.data.message || "Failed to permanent delete")
@@ -93,6 +96,8 @@ const NoteSection = ({
             toast.error(error?.data.message || "Failed to Pinned")
         }
     };
+
+ 
     const getPriorityColor = (priority: string) => {
         switch (priority) {
             case 'HIGH': return 'red';
@@ -173,9 +178,13 @@ const NoteSection = ({
 
                                     {/* Category */}
                                     <div style={{
-                                        marginBottom: 12,
-                                        display: "flex",
+                                        position: 'absolute',
+                                        top: 12,
+                                        left: 12,
+                                        display: 'flex',
+                                        gap: 8,
                                         alignItems: 'center',
+
                                     }}>
                                         <Tag
                                             color={category?.color || '#d9d9d9'}
@@ -192,6 +201,7 @@ const NoteSection = ({
                                     <Title
                                         level={5}
                                         style={{
+                                            marginTop: 20,
                                             marginBottom: 8,
                                             fontWeight: 500,
                                             whiteSpace: 'nowrap',
@@ -220,17 +230,25 @@ const NoteSection = ({
                                         alignItems: 'center',
                                         marginTop: 'auto'
                                     }}>
+                                        {/* edit and image action */}
                                         <div>
                                             {!note.isDeleted && !note.isArchived && (
-                                                <Tooltip title="Edit Note">
-                                                    <Button>
-                                                        <EditOutlined />
-                                                    </Button>
-                                                </Tooltip>
+                                                <div className="flex gap-2">
+                                                    <Tooltip title="Edit Note">
+                                                        <Button>
+                                                            <EditOutlined />
+                                                        </Button>
+                                                    </Tooltip>
+                                                    <Tooltip title="Add Image">
+                                                        <AddImage note={note} />
+                                                    </Tooltip>
+                                                    
+                                                </div>
                                             )}
                                         </div>
 
-                                        <Space style={{ alignItems: "flex-end" }}>
+                                        {/* archived and delete actions */}
+                                        <Space>
                                             {showArchiveActions && !note.isDeleted && (
                                                 <Tooltip title={note.isArchived ? 'Unarchive' : 'Archive'}>
                                                     <Button
